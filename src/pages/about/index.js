@@ -1,2 +1,7 @@
-require('./style.css')
-alert('this is about')
+import Vue from 'vue'
+import App from './About.vue'
+
+new Vue({
+  el: '#app',
+  render: h => h(App)
+})

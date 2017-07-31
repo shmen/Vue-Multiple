@@ -9,9 +9,9 @@ const extractSass = new ExtractTextPlugin({
     disable: process.env.NODE_ENV === 'development'
 })
 
-var entries = getEntries('src/pages/**/index.js')
-var pages = getEntries('src/pages/**/*.html')
-var pagesArr = Object.keys(pages)
+const entries = getEntries('src/pages/**/index.js')
+const pages = getEntries('src/pages/**/*.html')
+const pagesArr = Object.keys(pages)
 
 let config = {
     entry: entries,
@@ -27,7 +27,7 @@ let config = {
             loader: 'vue-loader',
             options: {
                 loaders: {
-                    css:extractSass.extract({
+                    css:ExtractTextPlugin.extract({
                         use: [
                             {loader: 'css-loader'},
                             {loader:'sass-loader'}
@@ -38,7 +38,7 @@ let config = {
             }
         }, {
             test: /\.s?css$/,
-            loader:extractSass.extract({
+            loader:ExtractTextPlugin.extract({
                 use: [{
                     loader: 'css-loader'
                 }],
@@ -69,7 +69,7 @@ let config = {
         openPage:'./dist/pages/index.html',
         historyApiFallback: true,
         noInfo: true,
-        port: 8080, //默认8080
+        port: 9090, //默认8080
         inline: true //可以监控js变化
     },
     performance: {
@@ -90,11 +90,11 @@ let config = {
     ]
 }
 Object.keys(entries).forEach(function(name, index) {
-    var template = pages[pagesArr[index]]
-    var plugin = new HtmlWebpackPlugin({
+    const template = pages[pagesArr[index]]
+    let plugin = new HtmlWebpackPlugin({
         favicon: './favicon.png', //favicon路径，通过webpack引入同时可以生成hash值
         filename: 'pages/' + name + '.html', //生成的html存放路径，相对于path
-        template: template, //html模板路径
+        template: './template.html', //html模板路径
         inject: true, //js插入的位置，true/'head'/'body'/false
         hash: true, //为静态资源生成hash值
         chunks: ['commons', name], //需要引入的chunk，不配置就会引入所有页面的资源
@@ -108,7 +108,7 @@ Object.keys(entries).forEach(function(name, index) {
 module.exports = config
 // 获取指定路径下的入口文件
 function getEntries(globPath) {
-    var files = glob.sync(globPath),
+    let files = glob.sync(globPath),
         entries = {};
 
     files.forEach(function(filepath) {
